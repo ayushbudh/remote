@@ -1,0 +1,23 @@
+{
+    "name": "chatbot",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node server.js",
+        "heroku-postbuild": "cd my-app && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "node-fetch": "^2.6.1",
+        "path": "^0.12.7",
+        "socket.io": "^3.1.1"
+    },
+    "engines": {
+        "node": "12.17.0"
+    }
+}
