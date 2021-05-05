@@ -1,4 +1,4 @@
-import questions from './questions'
+import questions from '../../questions'
 
 class ActionProvider {
     constructor(createChatBotMessage, setStateFunc, createClientMessage) {

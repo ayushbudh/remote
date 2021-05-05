@@ -1,18 +1,14 @@
 import React, { useState, useEffect, useHistory } from 'react';
-import Chatbot from './Chatbot'
-import ChatbotTalk from './ChatbotTalk'
+import Chatbot from './components/ChatBot/Chatbot';
+import ChatbotTalk from './components/ChatBot/ChatbotTalk';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import Login from './Login'
-import Call from './Call'
+import Login from './components/Login/Login'
+import Call from './components/Call/Call'
 
-
-function App() {
-
+const App = () =>{
     return (
         <div className="App">
-
-
             <BrowserRouter>
                 <Switch>
                     <Route path="/" exact component={Login} />
