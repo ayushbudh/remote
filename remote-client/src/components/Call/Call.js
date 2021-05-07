@@ -10,7 +10,6 @@ import { useHistory } from "react-router-dom";
 import SendIcon from '@material-ui/icons/Send';
 import CallEndIcon from '@material-ui/icons/CallEnd';
 
-// const ENDPOINT = "http://localhost:8000";
 const ENDPOINT = "/";
 
 
@@ -19,27 +18,24 @@ const useStyles = makeStyles((theme) => ({
         overflowY: "auto",
         height: "150px",
         width: "auto",
-        border: "0.5px solid black",
         margin: "1.4rem",
         paddingRight:'1rem',
         borderRadius: "1rem",
         backgroundColor:"white",
         boxShadow:"1px 5px 10px lightgrey",
     },
-    // gradient: {
-    //     background: "linear-gradient(#0F2027,#203A43,#2C5364)"
-    // },
     round: {
         borderRadius: "1rem",
         marginTop: "1rem",
         boxShadow:"2px 10px 20px black",
-         backgroundColor:"white",
+        backgroundColor:"white",
     },
     button:{
         margin:"15px",
     },
     msg:{
         width:"20rem",
+        height:"2rem",
     },
     msgblock:{
         backgroundColor:"white",
@@ -48,11 +44,15 @@ const useStyles = makeStyles((theme) => ({
     center:{
         marginLeft:'auto',
         marginRight:'auto',
+    },
+    align:{
+        marginTop:'13rem',
     }
 }));
 
 const Call = (props) => {
     const [chats, setChats] = useState([]);
+    const [OtherUserVideoState, setOtherUserVideoState] = useState(false);
     const [textChat, toggleTextChat] = useState(false)
     const [currentMsg, setCurrentMsg] = useState("");
     const userVideo = useRef();
@@ -92,6 +92,7 @@ const Call = (props) => {
 
             socketRef.current.on("user joined", userID => {
                 otherUser.current = userID;
+                setOtherUserVideoState(true);
             });
 
             socketRef.current.on("offer", handleRecieveCall);
@@ -204,6 +205,9 @@ const Call = (props) => {
     const history = useHistory();
     function clearServer() {
         socketRef.current.emit("clear server");
+        socketRef.current.on('disconnect', () => {
+            io.emit('message','Call ended');
+        })
         history.push('/');
     }
 
@@ -214,14 +218,17 @@ const Call = (props) => {
             <Grid container>
                 <Grid container item xs={12} >
                     <Grid item xs={6} className="userVideo">
-                        <video className={classes.round} autoPlay ref={userVideo} />
+                        <video className={classes.round} autoPlay ref={userVideo}  />
                     </Grid>
-                    <Grid item xs={6} classname="otherVideo">
-                        <video className={classes.round} autoPlay ref={partnerVideo} />
+                    <Grid item xs={6} className="otherVideo">
+                        {OtherUserVideoState?<video className={classes.round} autoPlay ref={partnerVideo} />:
+                        <h1 className={classes.align}>Connecting....</h1>}
+                        
+
                     </Grid>
                     
                 </Grid>
-                {/* <h3>Text Chat</h3> */}
+
                 <Grid container item xs={12} >
                     <div className={classes.center} >
                     <Grid item xs={12} className="textChat">

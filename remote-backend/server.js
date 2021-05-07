@@ -1,4 +1,6 @@
 const express = require("express");
+const { spawn } = require('child_process');
+
 const app = express();
 const fetch = require("node-fetch")
 var server = require('http').createServer(app);
@@ -40,7 +42,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('join', function (data) {
-        console.log(data);
+        
     });
 
     socket.on("join call", (data) => {
@@ -101,14 +103,47 @@ if (process.env.NODE_ENV === "production") {
 }
 
 async function fetchMood(combinedMessage) {
-    var mood = "sad";
-    mood = await fetch(`https://2ce60fef6f70.ngrok.io/mood/${combinedMessage}`, {
-        method: "GET",
-    }).then(res => res.json()).then(res => res.response).catch(e => mood = "sad")
-    console.log("MOOD IS ", mood)
+    let mood = "Sad"; 
+    let polarity=0;
+    const childPython = spawn('python3', ['mood.py', "I'm very Happy because my dreams came true."])
+    
+        childPython.stdout.on('data', (data) =>{
+     
+            polarity = Number(data);
+        
+            if(polarity===0.675){
+                mood="UO";
+            }
+            else if(polarity >=-1.0 && polarity<=-0.5 ){
+                mood="Very Sad";
+            }else if(polarity>=-0.5 && polarity<=0.0){
+                mood="Sadm";
+            }else if(polarity>0.0 && polarity<0.5){
+                mood="Happy";
+            }else{
+                mood="Very Happy";
+            }
+          
+        })
+        childPython.stderr.on('data', (data) =>{
+        
+          polarity = Number(data);
+        
+            if(polarity===0.675){
+                mood="UO";
+            }
+            else if(polarity >=-1.0 && polarity<=-0.5 ){
+                mood="Very Sad";
+            }else if(polarity>=-0.5 && polarity<=0.0){
+                mood="Sadm";
+            }else if(polarity>0.0 && polarity<0.5){
+                mood="Happy";
+            }else{
+                mood="Very Happy";
+            }
+        })
     return mood;
 }
-
 
 // we can replace name with some kind of unique ID whch can be stored in window object of the client
 async function handleMessage(message, name, combinedMessage) {
@@ -124,7 +159,6 @@ async function handleMessage(message, name, combinedMessage) {
     }
     // return `Response ${foundUser.count}`;
     return questions[foundUser.count]
-
 }
 
 app.get("/", (req, res) => {
@@ -133,12 +167,10 @@ app.get("/", (req, res) => {
 
 app.post("/", async (req, res) => {
     const body = JSON.parse(req.body);
-    console.log("BODY IS ", body);
     const responseMessage = await handleMessage(body.message, body.user, body.combinedMessage);
     res.send(responseMessage);
 })
 
-// app.listen(8000, () => console.log("Server is started!!");
 server.listen(port, () => console.log("Server is started!!"));
 
 

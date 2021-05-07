@@ -20,6 +20,7 @@
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.2",
+        "react-useanimations": "^2.0.6",
         "socket.io": "^3.1.1",
         "socket.io-client": "^3.1.1",
         "uuid": "^8.3.2",
@@ -48,5 +49,8 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+    },
+    "resolutions": {
+        "react-scripts/eslint-webpack-plugin": "2.4.1"
     }
 }
